@@ -157,12 +157,6 @@ components:
           type: integer
           format: int32
 
-    ResponseSubmittedResponse:
-      type: object
-      properties:
-        message:
-          type: string
-
     ConsultationResponse:
       type: object
       properties:
@@ -171,7 +165,6 @@ components:
           enum:
             - FAILED
             - REFERRED
-
 
     Error:
       type: object
