@@ -1,0 +1,10 @@
+{
+  "answers": [
+    {
+      "id": 1,
+      "questionId": 1,
+      "value": true,
+      "type": "BOOLEAN"
+    }
+  ]
+}
