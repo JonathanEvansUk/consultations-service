@@ -21,19 +21,19 @@ Users are also able to submit a Consultation Response, which will include the An
 
 This service was built using an API-first approach.
 
-The API specification can be found in `/src/main/resources/api/consultations-api.yaml`
+The API specification can be found in [resources directory](/src/main/resources/api/consultations-api.yaml).
 
 Models and API Controller interfaces were generated using OpenAPI Generator.
 
 In future I would expose the API documentation via an endpoint in the service, allowing users to view a Swagger page.
 
-## Example requests
+## Example Requests
 
-First ensure the service is running using `mvn spring-boot:run`
+First ensure the service is running using `mvn spring-boot:run`.
 
 The service will automatically populate some data for you to test against.
 
-The following are all curl commands based on request bodies stored in `.json` files in the `/requests` directory.
+The following are all curl commands, some based on request bodies stored in `.json` files in the [requests](/requests) directory.
 
 ### Get Consultation by ID
 
@@ -86,6 +86,8 @@ curl localhost:8080/consultations/1/responses -X POST -d @requests/submit_consul
 Spring Boot was chosen due to ease of use, and was the quickest way to get a REST API up and running.
 
 Spring Initializr was used to generate the project, via https://start.spring.io/
+
+I chose to aim for extensibility with this design, prioritising the ability to add new answer types and validator in the future.
 
 ### Models
 
