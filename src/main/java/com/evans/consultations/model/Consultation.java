@@ -6,6 +6,7 @@ import lombok.Builder;
 @Builder
 public record Consultation(
     Long id,
+    String title,
     List<Question> questions
 ) {
 

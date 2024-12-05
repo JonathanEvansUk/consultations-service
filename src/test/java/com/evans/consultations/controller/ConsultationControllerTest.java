@@ -59,6 +59,7 @@ class ConsultationControllerTest {
 
             Consultation consultation = Consultation.builder()
                 .id(99L)
+                .title("Genovian Pear Allergy")
                 .questions(List.of(ageCheck))
                 .build();
 
@@ -73,6 +74,7 @@ class ConsultationControllerTest {
             ConsultationDto responseBody = consultationById.getBody();
             assertThat(responseBody).isNotNull();
             assertThat(responseBody.getId()).isEqualTo(99L);
+            assertThat(responseBody.getTitle()).isEqualTo("Genovian Pear Allergy");
 
             List<QuestionDto> questions = responseBody.getQuestions();
             assertThat(questions).hasSize(1);
@@ -111,6 +113,7 @@ class ConsultationControllerTest {
 
             Consultation consultation = Consultation.builder()
                 .id(1L)
+                .title("Genovian Pear Allergy")
                 .questions(List.of(ageCheck))
                 .build();
 
@@ -147,6 +150,7 @@ class ConsultationControllerTest {
 
             Consultation consultation = Consultation.builder()
                 .id(1L)
+                .title("Genovian Pear Allergy")
                 .questions(List.of(ageCheck))
                 .build();
 
@@ -205,6 +209,7 @@ class ConsultationControllerTest {
 
             Consultation consultation = Consultation.builder()
                 .id(1L)
+                .title("Genovian Pear Allergy")
                 .questions(List.of(ageCheck))
                 .build();
 
@@ -241,6 +246,7 @@ class ConsultationControllerTest {
 
             Consultation consultation = Consultation.builder()
                 .id(1L)
+                .title("Genovian Pear Allergy")
                 .questions(List.of(ageCheck))
                 .build();
 

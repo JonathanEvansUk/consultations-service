@@ -174,6 +174,7 @@ public class ConsultationController implements ConsultationsApi {
 
             Consultation consultation = Consultation.builder()
                 .id(1L)
+                .title("Genovian Pear Allergy")
                 .questions(questions)
                 .build();
 
