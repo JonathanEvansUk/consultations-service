@@ -81,8 +81,6 @@ components:
           format: int64
         title:
           type: string
-        description:
-          type: string
         questions:
           type: array
           items:
