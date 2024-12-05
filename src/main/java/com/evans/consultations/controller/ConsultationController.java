@@ -1,7 +1,7 @@
 package com.evans.consultations.controller;
 
-import com.evans.consultations.exception.ConsultationsException;
 import com.evans.consultations.api.ConsultationsApi;
+import com.evans.consultations.exception.ConsultationsException;
 import com.evans.consultations.model.Answer;
 import com.evans.consultations.model.AnswerType;
 import com.evans.consultations.model.AnswerValidator;
