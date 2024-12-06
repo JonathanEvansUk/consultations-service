@@ -3,6 +3,8 @@ package com.evans.consultations.controller;
 import com.evans.consultations.api.ConsultationsApi;
 import com.evans.consultations.exception.ConsultationsException;
 import com.evans.consultations.model.Answer;
+import com.evans.consultations.model.Answer.BooleanAnswer;
+import com.evans.consultations.model.Answer.IntegerAnswer;
 import com.evans.consultations.model.AnswerType;
 import com.evans.consultations.model.AnswerValidator;
 import com.evans.consultations.model.Consultation;
@@ -75,15 +77,16 @@ public class ConsultationController implements ConsultationsApi {
             throw new ConsultationsException(HttpStatus.BAD_REQUEST, "Missing answers for questions: " + missingQuestionIds);
         }
 
-        record QuestionAndAnswer(Question question, Answer<?> answer) {}
+        record QuestionAndAnswer<T extends Answer<?>>(Question<T> question, T answer) {}
 
-        List<QuestionAndAnswer> questionAndAnswers = consultation.questions()
+        @SuppressWarnings("unchecked")
+        List<QuestionAndAnswer<Answer<?>>> questionAndAnswers = consultation.questions()
             .stream()
-            .map(question -> new QuestionAndAnswer(question, answersByQuestionId.get(question.id())))
+            .map(question -> new QuestionAndAnswer<>((Question<Answer<?>>) question, answersByQuestionId.get(question.id())))
             .toList();
 
         // verify that all answers match the answerType that the question expects
-        List<QuestionAndAnswer> questionAndAnswersWithNonMatchingType = questionAndAnswers.stream()
+        List<QuestionAndAnswer<Answer<?>>> questionAndAnswersWithNonMatchingType = questionAndAnswers.stream()
             .filter(questionAndAnswer -> questionAndAnswer.answer().type() != questionAndAnswer.question().answerType())
             .toList();
 
@@ -98,18 +101,18 @@ public class ConsultationController implements ConsultationsApi {
             throw new ConsultationsException(HttpStatus.BAD_REQUEST, "Wrong answer type for following question ids: " + questionIds);
         }
 
-        record QuestionAnswerValidationResult(Question question, Answer<?> answer, boolean valid) {}
+        record QuestionAnswerValidationResult<T extends Answer<?>>(Question<T> question, T answer, boolean valid) {}
 
-        List<QuestionAnswerValidationResult> validationResults = questionAndAnswers.stream()
+        List<QuestionAnswerValidationResult<Answer<?>>> validationResults = questionAndAnswers.stream()
             .map(questionAndAnswer -> {
-                Question question = questionAndAnswer.question();
+                Question<Answer<?>> question = questionAndAnswer.question();
                 Answer<?> answer = questionAndAnswer.answer();
                 boolean valid = validateAnswer(question, answer);
-                return new QuestionAnswerValidationResult(question, answer, valid);
+                return new QuestionAnswerValidationResult<>(question, answer, valid);
             })
             .toList();
 
-        List<QuestionAnswerValidationResult> invalidAnswers = validationResults.stream()
+        List<QuestionAnswerValidationResult<Answer<?>>> invalidAnswers = validationResults.stream()
             .filter(questionAnswerValidationResult -> !questionAnswerValidationResult.valid())
             .toList();
 
@@ -124,8 +127,8 @@ public class ConsultationController implements ConsultationsApi {
         return ResponseEntity.ok(responseDto);
     }
 
-    private boolean validateAnswer(Question question, Answer<?> answer) {
-        AnswerValidator<Answer<?>> answerValidator = (AnswerValidator<Answer<?>>) question.answerValidator();
+    private <T extends Answer<?>> boolean validateAnswer(Question<T> question, T answer) {
+        AnswerValidator<T> answerValidator = question.answerValidator();
 
         // need to check if the validator is of the correct answerType for the answer
         boolean validatorIsApplicableType = answerValidator.isApplicableType(answer);
@@ -148,14 +151,14 @@ public class ConsultationController implements ConsultationsApi {
 
         @Override
         public void onApplicationEvent(ContextRefreshedEvent event) {
-            Question ageCheck = Question.builder()
+            Question<BooleanAnswer> ageCheck = Question.<BooleanAnswer>builder()
                 .id(1L)
                 .text("Are you over 18 years old?")
                 .answerType(AnswerType.BOOLEAN)
                 .answerValidator(new AnswerValidator.BooleanValidator.MustBeTrueValidator())
                 .build();
 
-            Question previousReactionCheck = Question.builder()
+            Question<BooleanAnswer> previousReactionCheck = Question.<BooleanAnswer>builder()
                 .id(2L)
                 .text("Have you had a reaction to this medicine before?")
                 .answerType(AnswerType.BOOLEAN)
@@ -163,14 +166,14 @@ public class ConsultationController implements ConsultationsApi {
                 .build();
 
             // Arbitrary example to demonstrate validation of an integer answer
-            Question previousMedicineCount = Question.builder()
+            Question<IntegerAnswer> previousMedicineCount = Question.<IntegerAnswer>builder()
                 .id(3L)
                 .text("How many times have you taken this medicine?")
                 .answerType(AnswerType.INTEGER)
                 .answerValidator(new AnswerValidator.IntegerValidator.MustBeLessThanValidator(3))
                 .build();
 
-            List<Question> questions = List.of(ageCheck, previousReactionCheck, previousMedicineCount);
+            List<Question<? extends Answer<?>>> questions = List.of(ageCheck, previousReactionCheck, previousMedicineCount);
 
             Consultation consultation = Consultation.builder()
                 .id(1L)

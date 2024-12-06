@@ -7,7 +7,7 @@ import lombok.Builder;
 public record Consultation(
     Long id,
     String title,
-    List<Question> questions
+    List<Question<? extends Answer<?>>> questions
 ) {
 
 }

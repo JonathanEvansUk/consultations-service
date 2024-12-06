@@ -2,6 +2,7 @@ package com.evans.consultations.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.evans.consultations.model.Answer.BooleanAnswer;
 import com.evans.consultations.model.AnswerType;
 import com.evans.consultations.model.AnswerValidator.BooleanValidator.MustBeTrueValidator;
 import com.evans.consultations.model.Consultation;
@@ -50,7 +51,7 @@ class ConsultationControllerTest {
 
         @Test
         void shouldFetchQuestions() {
-            Question ageCheck = Question.builder()
+            Question<BooleanAnswer> ageCheck = Question.<BooleanAnswer>builder()
                 .id(10L)
                 .text("Are you over 18?")
                 .answerValidator(new MustBeTrueValidator())
@@ -104,7 +105,7 @@ class ConsultationControllerTest {
 
         @Test
         void shouldReturn200WhenAllAnswersPassValidation() {
-            Question ageCheck = Question.builder()
+            Question<BooleanAnswer> ageCheck = Question.<BooleanAnswer>builder()
                 .id(1L)
                 .text("Are you over 18?")
                 .answerValidator(new MustBeTrueValidator())
@@ -141,7 +142,7 @@ class ConsultationControllerTest {
 
         @Test
         void shouldReturn200WhenSomeAnswersFailValidation() {
-            Question ageCheck = Question.builder()
+            Question<BooleanAnswer> ageCheck = Question.<BooleanAnswer>builder()
                 .id(1L)
                 .text("Are you over 18?")
                 .answerValidator(new MustBeTrueValidator())
@@ -200,7 +201,7 @@ class ConsultationControllerTest {
 
         @Test
         void shouldReturn400WhenAnswersAreMissing() {
-            Question ageCheck = Question.builder()
+            Question<BooleanAnswer> ageCheck = Question.<BooleanAnswer>builder()
                 .id(1L)
                 .text("Are you over 18?")
                 .answerValidator(new MustBeTrueValidator())
@@ -237,7 +238,7 @@ class ConsultationControllerTest {
 
         @Test
         void shouldReturn400WhenAnswerTypeDoesNotMatchQuestionType() {
-            Question ageCheck = Question.builder()
+            Question<BooleanAnswer> ageCheck = Question.<BooleanAnswer>builder()
                 .id(1L)
                 .text("Are you over 18?")
                 .answerValidator(new MustBeTrueValidator())
